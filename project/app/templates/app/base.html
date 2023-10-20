@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'app/css/bootstrap.css' %}">
+</head>
+<body>
+    <h2 class="text-center alert alert-danger">CRUD OPERATION USING AJAX AND JQUERY</h2>
+    <div class="row">
+        <div class="col-sm-4 mx-4">
+            <h4 class="text-center alert alert-info">ADD DATA HERE</h4>
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="stuid" id="stuid">
+                {{form.as_p}}
+                <input type="submit" class="btn btn-success btn-save" value="save" id="btnsave">
+            </form>
+            <div class="text-center alert alert-danger" id="msg" style="display: none;"></div>
+        </div>
+        <div class="col-sm-7">
+            <h4 class="text-center alert alert-info"> SHOW USER DETAILS</h4>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    {% for s in details %}
+                    <tr>
+                        <td>{{s.id}}</td>
+                        <td>{{s.name}}</td>
+                        <td>{{s.email}}</td>
+                        <td>{{s.password}}</td>
+                        <td><input type="submit" data-sid="{{s.id}}" value="EDIT" class="btn btn-warning btn-sm editbtn">
+                        <input type="submit" data-sid="{{s.id}}" value="DELETE" class="btn btn-danger btn-sm delbtn"></td>
+                    </tr>
+                </tbody>
+                    {% endfor %}
+            </table>
+        </div>
+    </div>
+    <script src="{% static 'app/js/bootstrap.js' %}"></script>
+    <script src="{% static 'app/js/jquery.js' %}"></script>
+    {% include 'app/ajax.html' %}
+</body>
+</html>

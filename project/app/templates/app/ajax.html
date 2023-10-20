@@ -1,0 +1,91 @@
+<script> 
+
+// applying function the save button via its id
+$('#btnsave').click(function(){
+    let sid=$("#stuid").val();
+    let nm= $("#nameid").val();
+    let em= $("#emailid").val();
+    let pwd= $("#passwordid").val();
+    if(nm==""){
+        // printing corresponding messages to the respective fields. 
+        $("#msg").text("please enter name");
+        $("#msg").show();     // added show because we have used display=none in html code
+    }
+    else if(em==""){
+        $("#msg").text("please enter email");
+        $("#msg").show();
+    }
+    else if(pwd==""){
+        $("#msg").text("please enter password");
+        $("#msg").show();
+    }
+    else{
+    mydata={stuid:sid,name:nm,email:em,password:pwd}; //storing the data
+
+
+    // make an Ajax request
+    $.ajax({
+        url:"{% url 'savedata' %}",
+        method:"POST",
+        data:mydata,
+        dataType:"json",
+        success:function(data){            
+        console.log("data submitted") ; 
+        }     
+
+    });
+}
+})
+
+
+// Delete Data
+
+
+//targetting the parent- tbody and performing click event while clicking on the delete button whose class is "delbtn"
+$("tbody").on("click",".delbtn",function(){ 
+    console.log("deleted");
+    let id= $(this).attr("data-sid");
+    console.log(id);
+    mydata={sid:id}
+    mythis=this   //used instance because jquery doesnt understands the direct use of this
+    $.ajax({
+        url:"{% url 'deletedata' %}",
+        method:"POST",
+        data:mydata,
+        success:function(data){
+            if(data.status==1){
+                $("#msg").text("Data Deleted Successfully");
+                $("#msg").show();
+                $(mythis).closest("tr").fadeOut(); //applied fadeout for removing/deleting the unwanted data
+            }
+            if(data.status==0){
+                $("#msg").text("Unable To Delete");
+                $("#msg").show();
+            }
+        },
+    });
+})
+
+
+
+// Edit Or Update Data
+
+// performing click action while clicking on the edit button whose class is "editbtn"
+$("tbody").on("click",".editbtn",function(){
+    let id= $(this).attr("data-sid");  // getting special attribute name data-sid
+    mydata={sid:id}
+    $.ajax({
+        url:"{% url 'editdata' %}",
+        method:"POST",
+        data:mydata,
+        success:function(data){
+            $("#stuid").val(data.id)
+           $("#nameid").val(data.name)
+           $("#emailid").val(data.email)
+           $("#passwordid").val(data.password)
+        },
+    });
+})
+
+
+</script>    
